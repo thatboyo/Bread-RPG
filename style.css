@@ -6,6 +6,6 @@
 
 }
 canvas {
-    width: 100%;
+    width: min(100vw, calc(100vh * 16 / 9));
     background  : blue;  
 }
