@@ -1,6 +1,9 @@
 import { resources } from './resource.js';
 import { Sprite } from './Sprite.js';
 import { Vector2 } from './Vector2.js';
+import { GameLoop } from './gameLoop.js';
+import { DOWN, Input, LEFT, RIGHT, UP } from './Input.js';
+import { gridCells } from './helpers/grid.js';
 
 const canvas  =  document.querySelector ("#game");
 const ctx = canvas.getContext("2d");
@@ -19,24 +22,52 @@ const hero = new Sprite({
     frameSize: new Vector2(32, 32),
     hFrames: 3,
     vFrames: 8,
-    frame: 1
+    frame: 1,
+    position: new Vector2(gridCells(6), gridCells(5))
+    
 })
+
+
+
+
 
 const shadow = new Sprite({
     resource: resources.images.shadow,
     frameSize: new Vector2(32, 32)
 })
-const heroPos = new Vector2(16 * 6, 16 *5);
+
+
+
+const input = new Input();
+const update = () => {
+    if (input.direction == DOWN){
+        hero.position.y += 1;
+        hero.frame = 0;
+    }
+    if (input.direction == UP){
+        hero.position.y -= 1;
+        hero.frame = 6;
+    }
+    if (input.direction == LEFT){
+        hero.position.x -= 1;
+        hero.frame = 9;
+    }
+    if (input.direction == RIGHT){
+        hero.position.x += 1;
+        hero.frame = 3;
+    }
+}; 
+
 
 const draw = () => {
     skySprite.drawImage(ctx, 0, 0);
     groundSprite.drawImage(ctx, 0, 0);
     
     const heroOffset = new Vector2(-8, -21);
-    const heroPosX = heroPos.x+heroOffset.x;
-    const heroPosY = heroPos.y+heroOffset.y;
+    const heroPosX = hero.position.x+heroOffset.x;
+    const heroPosY = hero.position.y+heroOffset.y;
     shadow.drawImage(ctx, heroPosX, heroPosY);
     hero.drawImage(ctx, heroPosX, heroPosY+1);
 }
-const gameLoop = new GameLoop(PaymentRequestUpdateEvent, draw);
-
+const gameLoop = new GameLoop(update, draw);
+gameLoop.start();
