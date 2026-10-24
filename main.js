@@ -22,7 +22,11 @@ const hero = new Sprite({
     frame: 1
 })
 
-const heroPos = new Vector2(16 * 5, 16 *5);
+const shadow = new Sprite({
+    resource: resources.images.shadow,
+    frameSize: new Vector2(32, 32)
+})
+const heroPos = new Vector2(16 * 6, 16 *5);
 
 const draw = () => {
     skySprite.drawImage(ctx, 0, 0);
@@ -31,16 +35,8 @@ const draw = () => {
     const heroOffset = new Vector2(-8, -21);
     const heroPosX = heroPos.x+heroOffset.x;
     const heroPosY = heroPos.y+heroOffset.y;
-    hero.drawImage(ctx, heroPosX, heroPosY);
+    shadow.drawImage(ctx, heroPosX, heroPosY);
+    hero.drawImage(ctx, heroPosX, heroPosY+1);
 }
-
-
-setInterval(() => {
-draw();      
-}, 300);
-
-
-
-
-
+const gameLoop = new GameLoop(PaymentRequestUpdateEvent, draw);
 

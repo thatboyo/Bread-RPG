@@ -14,7 +14,7 @@ class Resources{
             this.images[key] = {
                 image: img,
                 isLoaded: false,
-            }
+            } 
             img.onload = () => {
              this.images[key].isLoaded = true;
             }
