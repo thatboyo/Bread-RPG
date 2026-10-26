@@ -1,9 +1,12 @@
 import { resources } from './resource.js';
 import { Sprite } from './Sprite.js';
 import { Vector2 } from './Vector2.js';
+//import { duplicate } from './Vector2.js';
 import { GameLoop } from './gameLoop.js';
 import { DOWN, Input, LEFT, RIGHT, UP } from './Input.js';
 import { gridCells } from './helpers/grid.js';
+import { moveTowards } from './helpers/MoveTowards.js';
+
 
 const canvas  =  document.querySelector ("#game");
 const ctx = canvas.getContext("2d");
@@ -24,10 +27,10 @@ const hero = new Sprite({
     vFrames: 8,
     frame: 1,
     position: new Vector2(gridCells(6), gridCells(5))
-    
+        
 })
 
-
+const heroDestinationPosition = hero.position.duplicate();
 
 
 
@@ -40,24 +43,42 @@ const shadow = new Sprite({
 
 const input = new Input();
 const update = () => {
+    const distance = moveTowards(hero, heroDestinationPosition, 1);
+    const hasArrived = distance <= 1;
+       if (hasArrived){
+        tryMove();
+}
+};
+
+
+const tryMove = () => {
+    if (!input.direction){
+        return;
+    }
+    let nextX = heroDestinationPosition.x;
+    let nextY = heroDestinationPosition.y;
+    const gridSize = 16;
+    
     if (input.direction == DOWN){
-        hero.position.y += 1;
+        nextY += gridSize;
         hero.frame = 0;
     }
     if (input.direction == UP){
-        hero.position.y -= 1;
+        nextY -= gridSize;
         hero.frame = 6;
     }
     if (input.direction == LEFT){
-        hero.position.x -= 1;
+        nextX -= gridSize;
         hero.frame = 9;
     }
     if (input.direction == RIGHT){
-        hero.position.x += 1;
+        nextX += gridSize;
         hero.frame = 3;
     }
-}; 
-
+    heroDestinationPosition.x = nextX;
+    heroDestinationPosition.y = nextY;
+    console.log(input.direction);
+}
 
 const draw = () => {
     skySprite.drawImage(ctx, 0, 0);
